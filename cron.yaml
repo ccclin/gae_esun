@@ -1,0 +1,9 @@
+cron:
+- description: "Check esun jpy, if lower than expected will send mail"
+  url: /check
+  schedule: every 30 minutes from 01:00 to 09:00
+  target: default
+  retry_parameters:
+    job_retry_limit: 3
+    min_backoff_seconds: 5
+    max_doublings: 5

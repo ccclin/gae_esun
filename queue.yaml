@@ -1,0 +1,4 @@
+queue:
+- name: send-mail
+  rate: 1/s
+  target: default
