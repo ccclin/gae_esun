@@ -3,15 +3,12 @@ package model
 import (
 	"context"
 	"encoding/binary"
-	"errors"
 	"math"
 	"net/http"
 	"os"
 	"strconv"
-	"strings"
 	"time"
 
-	"github.com/PuerkitoBio/goquery"
 	"google.golang.org/appengine/log"
 	"google.golang.org/appengine/memcache"
 	"google.golang.org/appengine/urlfetch"
@@ -50,7 +47,8 @@ func (esun *Esun) GetJPY(c chan bool) {
 		return
 	}
 
-	jpy, err := crawler(resp)
+	crawler := Crawler{Resp: resp}
+	jpy, err := crawler.GetJpy()
 	if err != nil {
 		esun.setErrorAndJPY(err, 1.0)
 		c <- true
@@ -102,21 +100,6 @@ func (esun *Esun) setMail() {
 	if err := memcache.JSON.Set(esun.Ctx, item); err != nil {
 		esun.Err = err
 	}
-}
-
-func crawler(resp *http.Response) (jpy float64, err error) {
-	jpy = 1.0
-	defer resp.Body.Close()
-	doc, _ := goquery.NewDocumentFromReader(resp.Body)
-	s := doc.Find(os.Getenv("SELECTION"))
-	bind := s.Text()
-	stirngArray := strings.Split(bind, "\n")
-	if len(stirngArray) > 7 {
-		jpy, err = strconv.ParseFloat(strings.TrimSpace(stirngArray[6]), 64)
-	} else {
-		err = errors.New("crawer failed")
-	}
-	return
 }
 
 // Float64ToByte is float64 to byte

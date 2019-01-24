@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/ccclin/gae_esun/model"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 	"google.golang.org/appengine/taskqueue"
-	"github.com/ccclin/gae_esun/model"
 )
 
 // CheckHandle is GET '/check'
