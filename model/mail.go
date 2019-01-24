@@ -1,4 +1,4 @@
-package app
+package model
 
 import (
 	"context"
@@ -11,13 +11,17 @@ import (
 	"google.golang.org/appengine/memcache"
 )
 
+// SENDKEY is for queue to send mail
+const SENDKEY = "SEND_KEY"
+
 // Mail for send mail
 type Mail struct {
 	Ctx  context.Context
 	Esun Esun
 }
 
-func (m *Mail) getEsun() {
+// GetEsun is get ESUN from memcache
+func (m *Mail) GetEsun() {
 	memcache.JSON.Get(m.Ctx, SENDKEY, &m.Esun)
 }
 

@@ -1,4 +1,4 @@
-package app
+package controller
 
 import (
 	"fmt"
@@ -7,18 +7,20 @@ import (
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 	"google.golang.org/appengine/taskqueue"
+	"github.com/ccclin/gae_esun/model"
 )
 
-func checkHandle(w http.ResponseWriter, r *http.Request) {
+// CheckHandle is GET '/check'
+func CheckHandle(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/check" {
 		errorHandler(w, r, http.StatusNotFound)
 		return
 	}
 	ctx := appengine.NewContext(r)
-	esun := Esun{Ctx: ctx}
+	esun := model.Esun{Ctx: ctx}
 	c := make(chan bool)
-	go esun.setExpected(c)
-	go esun.getJPY(c)
+	go esun.SetExpected(c)
+	go esun.GetJPY(c)
 	<-c
 	<-c
 
@@ -26,7 +28,7 @@ func checkHandle(w http.ResponseWriter, r *http.Request) {
 	log.Infof(ctx, "Expected is %v", esun.Expected)
 
 	if esun.JPY < esun.Expected {
-		esun.setMemcache()
+		esun.SetMemcache()
 		t := taskqueue.NewPOSTTask("/queue", nil)
 		if _, err := taskqueue.Add(ctx, t, "send-mail"); err != nil {
 			errorHandler(w, r, http.StatusInternalServerError)
@@ -41,14 +43,15 @@ func checkHandle(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func queueHandle(w http.ResponseWriter, r *http.Request) {
+// QueueHandle is POST '/post'
+func QueueHandle(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/queue" {
 		errorHandler(w, r, http.StatusNotFound)
 		return
 	}
 	ctx := appengine.NewContext(r)
-	mail := Mail{Ctx: ctx}
-	mail.getEsun()
+	mail := model.Mail{Ctx: ctx}
+	mail.GetEsun()
 	mail.Send()
 }
 
