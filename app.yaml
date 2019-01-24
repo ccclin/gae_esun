@@ -1,19 +1,17 @@
-runtime: go
-api_version: go1
+runtime: go111
 
 env: standard
-threadsafe: false
 instance_class: F1
 handlers:
   - url: /queue/.*
-    script: _go_app
+    script: auto
     login: admin
 
   - url: '/.*'
-    script: _go_app
+    script: auto
 
 env_variables:
   ESUN: "https://www.esunbank.com.tw/bank/personal/deposit/rate/forex/foreign-exchange-rates"
   SELECTION: "#inteTable1 tbody tr:nth-child(6)"
-  EXPECTED: "0.2705"
+  EXPECTED: "0.28"
   TO: <to@mail>

@@ -1,4 +1,4 @@
-package app
+package model
 
 import (
 	"context"
@@ -30,13 +30,15 @@ type Esun struct {
 	Ctx      context.Context
 }
 
-func (esun *Esun) setExpected(c chan bool) {
+// SetExpected is set expected to memcache
+func (esun *Esun) SetExpected(c chan bool) {
 	expJPY, _ := strconv.ParseFloat(os.Getenv("EXPECTED"), 64)
 	esun.getFromMemcache(expJPY)
 	c <- true
 }
 
-func (esun *Esun) getJPY(c chan bool) {
+// GetJPY is get JPY from ESUN
+func (esun *Esun) GetJPY(c chan bool) {
 	ctx := esun.Ctx
 	client := urlfetch.Client(ctx)
 	req, _ := http.NewRequest("GET", os.Getenv("ESUN"), nil)
@@ -73,7 +75,8 @@ func (esun *Esun) setErrorAndJPY(err error, jpy float64) {
 	esun.JPY = jpy
 }
 
-func (esun *Esun) setMemcache() {
+// SetMemcache is set into memcache
+func (esun *Esun) SetMemcache() {
 	esun.setESUNJPY()
 	esun.setMail()
 }
