@@ -63,12 +63,13 @@ func (esun *Esun) getFromMemcache(oriJPY float64) {
 	if err == nil {
 		esun.Expected = ByteToFloat64(value.Value)
 	} else {
+		log.Infof(esun.Ctx, "error is %s", err.Error())
 		esun.Expected = oriJPY
 	}
 }
 
 func (esun *Esun) setErrorAndJPY(err error, jpy float64) {
-	log.Errorf(esun.Ctx, "err %s", err)
+	log.Errorf(esun.Ctx, "err %s", err.Error())
 	esun.Err = err
 	esun.JPY = jpy
 }
@@ -83,7 +84,7 @@ func (esun *Esun) setESUNJPY() {
 	item := &memcache.Item{
 		Key:        ESUNJPY,
 		Value:      Float64ToByte(esun.JPY),
-		Expiration: time.Duration(28800) * time.Second,
+		Expiration: time.Duration(8) * time.Hour,
 	}
 
 	if err := memcache.Set(esun.Ctx, item); err != nil {
