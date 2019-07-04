@@ -10,5 +10,7 @@ import (
 func main() {
 	http.HandleFunc("/check", controller.CheckHandle)
 	http.HandleFunc("/queue", controller.QueueHandle)
+
+	http.HandleFunc("/send", controller.SendHandle)
 	appengine.Main()
 }

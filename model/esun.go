@@ -6,7 +6,6 @@ import (
 	"math"
 	"net/http"
 	"os"
-	"strconv"
 	"time"
 
 	"google.golang.org/appengine/log"
@@ -29,7 +28,11 @@ type Esun struct {
 
 // SetExpected is set expected to memcache
 func (esun *Esun) SetExpected(c chan bool) {
-	expJPY, _ := strconv.ParseFloat(os.Getenv("EXPECTED"), 64)
+	var expected Expected
+	expected.GetDatastore(esun.Ctx, &expected)
+	log.Infof(esun.Ctx, "expected is %f", expected.Expected)
+
+	expJPY := expected.Expected
 	esun.getFromMemcache(expJPY)
 	c <- true
 }
