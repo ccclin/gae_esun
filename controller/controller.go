@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -12,6 +13,11 @@ import (
 
 // CheckHandle is GET '/check'
 func CheckHandle(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		errorHandler(w, r, http.StatusMethodNotAllowed)
+		return
+	}
+
 	if r.URL.Path != "/check" {
 		errorHandler(w, r, http.StatusNotFound)
 		return
@@ -43,8 +49,13 @@ func CheckHandle(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// QueueHandle is POST '/post'
+// QueueHandle is POST '/queue'
 func QueueHandle(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		errorHandler(w, r, http.StatusMethodNotAllowed)
+		return
+	}
+
 	if r.URL.Path != "/queue" {
 		errorHandler(w, r, http.StatusNotFound)
 		return
@@ -53,6 +64,25 @@ func QueueHandle(w http.ResponseWriter, r *http.Request) {
 	mail := model.Mail{Ctx: ctx}
 	mail.GetEsun()
 	mail.Send()
+}
+
+// SendHandle is POST '/send'
+func SendHandle(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		errorHandler(w, r, http.StatusMethodNotAllowed)
+		return
+	}
+
+	if r.URL.Path != "/send" {
+		errorHandler(w, r, http.StatusNotFound)
+		return
+	}
+
+	ctx := appengine.NewContext(r)
+	var expected model.Expected
+	json.NewDecoder(r.Body).Decode(&expected)
+	log.Infof(ctx, "expected is %f", expected.Expected)
+	expected.PutDatastore(ctx, &expected)
 }
 
 func errorHandler(w http.ResponseWriter, r *http.Request, status int) {

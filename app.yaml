@@ -13,5 +13,4 @@ handlers:
 env_variables:
   ESUN: "https://www.esunbank.com.tw/bank/personal/deposit/rate/forex/foreign-exchange-rates"
   SELECTION: "#inteTable1 tbody tr:nth-child(6)"
-  EXPECTED: "0.28"
   TO: <to@mail>
