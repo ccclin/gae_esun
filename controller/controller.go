@@ -6,9 +6,9 @@ import (
 	"net/http"
 
 	"github.com/ccclin/gae_esun/model"
-	"google.golang.org/appengine"
-	"google.golang.org/appengine/log"
-	"google.golang.org/appengine/taskqueue"
+	"google.golang.org/appengine/v2"
+	"google.golang.org/appengine/v2/log"
+	"google.golang.org/appengine/v2/taskqueue"
 )
 
 // CheckHandle is GET '/check'
@@ -80,7 +80,12 @@ func SendHandle(w http.ResponseWriter, r *http.Request) {
 
 	ctx := appengine.NewContext(r)
 	var expected model.Expected
-	json.NewDecoder(r.Body).Decode(&expected)
+	err := json.NewDecoder(r.Body).Decode(&expected)
+	if err != nil {
+		log.Errorf(ctx, "son.NewDecoder(r.Body).Decode failed %+v", err)
+		errorHandler(w, r, http.StatusBadRequest)
+		return
+	}
 	log.Infof(ctx, "expected is %f", expected.Expected)
 	expected.PutDatastore(ctx, &expected)
 }
