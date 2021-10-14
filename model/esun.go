@@ -8,9 +8,9 @@ import (
 	"os"
 	"time"
 
-	"google.golang.org/appengine/log"
-	"google.golang.org/appengine/memcache"
-	"google.golang.org/appengine/urlfetch"
+	"google.golang.org/appengine/v2/log"
+	"google.golang.org/appengine/v2/memcache"
+	"google.golang.org/appengine/v2/urlfetch"
 )
 
 // ESUNJPY is esun jpy now prcing
@@ -97,7 +97,7 @@ func (esun *Esun) setESUNJPY() {
 
 func (esun *Esun) setMail() {
 	item := &memcache.Item{
-		Key:    SENDKEY,
+		Key:    SendKey,
 		Object: esun,
 	}
 

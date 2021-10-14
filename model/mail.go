@@ -6,13 +6,14 @@ import (
 	"strconv"
 	"strings"
 
-	"google.golang.org/appengine"
-	"google.golang.org/appengine/mail"
-	"google.golang.org/appengine/memcache"
+	"google.golang.org/appengine/v2"
+	"google.golang.org/appengine/v2/log"
+	"google.golang.org/appengine/v2/mail"
+	"google.golang.org/appengine/v2/memcache"
 )
 
-// SENDKEY is for queue to send mail
-const SENDKEY = "SEND_KEY"
+// SendKey is for queue to send mail
+const SendKey = "SEND_KEY"
 
 // Mail for send mail
 type Mail struct {
@@ -22,7 +23,10 @@ type Mail struct {
 
 // GetEsun is get ESUN from memcache
 func (m *Mail) GetEsun() {
-	memcache.JSON.Get(m.Ctx, SENDKEY, &m.Esun)
+	_, err := memcache.JSON.Get(m.Ctx, SendKey, &m.Esun)
+	if err != nil {
+		log.Errorf(m.Ctx, "memcache.JSON.Get failed %+v", err)
+	}
 }
 
 // Send will send mail
@@ -37,5 +41,8 @@ func (m *Mail) Send() {
 		Subject:  "[ESUN] JPY is " + jpyPricing,
 		HTMLBody: htmlBody,
 	}
-	mail.Send(ctx, msg)
+	err := mail.Send(ctx, msg)
+	if err != nil {
+		log.Errorf(ctx, "send mail failed %+v", err)
+	}
 }
