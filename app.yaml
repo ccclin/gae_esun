@@ -13,5 +13,5 @@ handlers:
 
 env_variables:
   ESUN: "https://www.esunbank.com.tw/bank/personal/deposit/rate/forex/foreign-exchange-rates"
-  SELECTION: "#inteTable1 tbody tr:nth-child(6)"
+  SELECTION: "#exchangeRate table tbody tr.JPY td:nth-child(11)"
   TO: <to@mail>

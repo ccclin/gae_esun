@@ -20,10 +20,10 @@ const (
 
 // Esun is esun bank
 type Esun struct {
-	Expected float64
-	JPY      float64
-	Err      error
-	Ctx      context.Context
+	Expected float64         `json:"expected"`
+	JPY      float64         `json:"jpy"`
+	Err      error           `json:"-"`
+	Ctx      context.Context `json:"-"`
 }
 
 // SetExpected is set expected to memcache
