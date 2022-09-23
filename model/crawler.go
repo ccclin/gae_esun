@@ -1,7 +1,6 @@
 package model
 
 import (
-	"errors"
 	"net/http"
 	"os"
 	"strconv"
@@ -21,12 +20,7 @@ func (crawler *Crawler) GetJpy() (jpy float64, err error) {
 	defer crawler.Resp.Body.Close()
 	doc, _ := goquery.NewDocumentFromReader(crawler.Resp.Body)
 	s := doc.Find(os.Getenv("SELECTION"))
-	bind := s.Text()
-	stirngArray := strings.Split(bind, "\n")
-	if len(stirngArray) > 7 {
-		jpy, err = strconv.ParseFloat(strings.TrimSpace(stirngArray[6]), 64)
-	} else {
-		err = errors.New("crawer failed")
-	}
+	jpyString := s.Text()
+	jpy, err = strconv.ParseFloat(strings.TrimSpace(jpyString), 64)
 	return
 }
