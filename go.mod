@@ -9,6 +9,7 @@ require (
 
 require (
 	github.com/andybalholm/cascadia v1.3.1 // indirect
-	github.com/golang/protobuf v1.3.1 // indirect
-	golang.org/x/net v0.0.0-20220708220712-1185a9018129 // indirect
+	github.com/golang/protobuf v1.5.2 // indirect
+	golang.org/x/net v0.5.0 // indirect
+	google.golang.org/protobuf v1.28.1 // indirect
 )
