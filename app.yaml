@@ -1,4 +1,4 @@
-runtime: go116
+runtime: go119
 
 env: standard
 app_engine_apis: true
@@ -13,5 +13,5 @@ handlers:
 
 env_variables:
   ESUN: "https://www.esunbank.com.tw/bank/personal/deposit/rate/forex/foreign-exchange-rates"
-  SELECTION: "#exchangeRate table tbody tr.JPY td:nth-child(11)"
+  SELECTION: "#exchangeRate table tbody tr.px-3.py-2.p-lg-0.JPY.currency td.l-exchangeRate__table--inner.text-highlight div.SellDecreaseRate"
   TO: <to@mail>
